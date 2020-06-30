@@ -1,1 +1,1 @@
-# dockerize LNMP
+# dockerized LNMP
