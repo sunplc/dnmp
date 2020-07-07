@@ -4,7 +4,7 @@ ENV TINI_VERSION 0.18.0-r0
 
 RUN apk add --no-cache tini=$TINI_VERSION
 
-ADD . /src/app/
+# ADD . /src/app/
 
 WORKDIR /src/app
 
