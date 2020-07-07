@@ -1,8 +1,8 @@
 <?php
 
-$dsn = 'mysql:host=db;port=3306';
+$dsn = 'mysql:host=mysql;port=3306';
 $user = 'root';
-$password = 'root';
+$password = 'root_1233';
 
 try {
     $dbh = new PDO($dsn, $user, $password);

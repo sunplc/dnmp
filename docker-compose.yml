@@ -3,28 +3,33 @@ services:
 
   mysql:
     image: mysql:5.7.30
+    container_name: mysql
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      - MYSQL_ROOT_PASSWORD=root_1233
     volumes:
       - ./data/mysql:/var/lib/mysql
 
   redis:
     build: ./redis
+    container_name: redis
     volumes:
       - ./data/redis:/data
 
-  php-workspace:
+  php:
     build: ./php
+    container_name: php
     volumes:
       - ./www:/var/www/html
-    depends_on:
-      - mysql
-      - redis
+      # 复制时区配置文件到容器中
+      - ./php/timezone.ini:/usr/local/etc/php/conf.d/timezone.ini
+    environment:
+      TZ: Asia/Shanghai
 
   phpredisadmin:
     build: ./phpredisadmin
+    container_name: pra
     environment:
       - ADMIN_USER=admin4455
       - ADMIN_PASS=admin445566
@@ -38,9 +43,9 @@ services:
   phpmyadmin:
     #build: ./phpmyadmin
     image: phpmyadmin/phpmyadmin
+    container_name: pma
     environment:
       - PMA_HOST=mysql
-      - MYSQL_ROOT_PASSWORD=root
     links:
       - mysql
     ports:
@@ -48,6 +53,7 @@ services:
 
   nginx:
     build: ./nginx
+    container_name: nginx
     volumes:
       - ./log/nginx:/var/log/nginx/
       # php请求可以被转发到php虚拟机，但其他静态文件请求
@@ -57,5 +63,5 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - php-workspace
+      - php
 

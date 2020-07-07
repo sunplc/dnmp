@@ -2,27 +2,31 @@
 
 $redis = new Redis();
 $redis->connect('redis', 6379);
+$redis->del(['STRING', 'HASH', 'LIST', 'SET', 'ZSET']);
 
 // String
 $key = 'STRING';
 $redis->incr($key);
 
-echo "<pre>";
-var_export($redis->info());
-echo "</pre>";
-
 // Hash
 $redis->hMset('HASH', ['username'=> 'jack','age'=>25]);
 
 // List
-$redis->lPush('LIST', date('Ymd'));
+$i = 10;
+while ($i-- > 0) {
+    $redis->lPush('LIST', $i . '-' . rand(1, 10000));
+}
 
 // Set
-$redis->sAdd('SET', time());
+$i = 10;
+while ($i-- > 0) {
+    $redis->sAdd('SET', rand(1, 10000));
+}
 
 // ZSet
-$redis->zAdd('ZSET', rand(1,9),  'jack');
-$redis->zAdd('ZSET', rand(1,9),  'jobs');
-$redis->zAdd('ZSET', rand(1,9),  'steve');
-$redis->zAdd('ZSET', rand(1,9),  'patric');
+$redis->zAdd('ZSET', rand(0, 100),  'jack');
+$redis->zAdd('ZSET', rand(0, 100),  'jobs');
+$redis->zAdd('ZSET', rand(0, 100),  'steve');
+$redis->zAdd('ZSET', rand(0, 100),  'patric');
 
+echo 'set redis OK';
