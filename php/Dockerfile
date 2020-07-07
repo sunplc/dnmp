@@ -4,8 +4,7 @@ FROM php:7.3-fpm-alpine
 # 为 alpine 系统中设置时区
 RUN apk add tzdata \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
-    && echo "Asia/Shanghai" >  /etc/timezone \
-    && apk del tzdata
+    && echo "Asia/Shanghai" >  /etc/timezone
 
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
     && docker-php-ext-install pdo_mysql \
