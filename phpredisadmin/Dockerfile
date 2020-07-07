@@ -1,0 +1,19 @@
+FROM composer:1.7
+
+ENV TINI_VERSION 0.18.0-r0
+
+RUN apk add --no-cache tini=$TINI_VERSION
+
+ADD . /src/app/
+
+WORKDIR /src/app
+
+# RUN composer config -g repo.packagist composer https://packagist.phpcomposer.com
+RUN composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
+
+RUN composer install
+
+RUN cp includes/config.environment.inc.php includes/config.inc.php
+
+EXPOSE 8080
+ENTRYPOINT [ "tini", "--", "php", "-S", "0.0.0.0:8080" ]

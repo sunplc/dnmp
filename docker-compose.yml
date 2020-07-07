@@ -1,0 +1,61 @@
+version: '3'
+services:
+
+  mysql:
+    image: mysql:5.7.30
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+
+  redis:
+    build: ./redis
+    volumes:
+      - ./data/redis:/data
+
+  php-workspace:
+    build: ./php
+    volumes:
+      - ./www:/var/www/html
+    depends_on:
+      - mysql
+      - redis
+
+  phpredisadmin:
+    build: ./phpredisadmin
+    environment:
+      - ADMIN_USER=admin4455
+      - ADMIN_PASS=admin445566
+      - REDIS_1_HOST=redis
+      - REDIS_1_PORT=6379
+    links:
+        - redis
+    ports:
+        - "8080:8080"
+
+  phpmyadmin:
+    #build: ./phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - PMA_HOST=mysql
+      - MYSQL_ROOT_PASSWORD=root
+    links:
+      - mysql
+    ports:
+        - "8081:80"
+
+  nginx:
+    build: ./nginx
+    volumes:
+      - ./log/nginx:/var/log/nginx/
+      # php请求可以被转发到php虚拟机，但其他静态文件请求
+      # 不能被转发到php虚拟机，所以为了可以访问静态文件，
+      # 需要再把www目录挂载到nginx虚拟机
+      # - ./www:/var/www/html
+    ports:
+      - "80:80"
+    depends_on:
+      - php-workspace
+
