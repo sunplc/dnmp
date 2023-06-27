@@ -1,4 +1,2 @@
-log/*
-!log/.gitkeep
-data/*
-!data/.gitkeep
+/mysql/data
+/www
