@@ -1,0 +1,4 @@
+/www/
+.DS_Store
+/mysql/data/
+/redis/data/
